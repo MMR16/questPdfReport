@@ -23,7 +23,7 @@ internal class Program
     private static void Main(string[] args)
     {
 
-        var document = new ReportDocument();
+        var document = new JournalPaymenmtDetails();
         document.ShowInPreviewer();
       //  document.GeneratePdf("report.pdf");
 
