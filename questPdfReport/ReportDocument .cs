@@ -2,170 +2,224 @@
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Quest = QuestPDF.Infrastructure;
+
 
 namespace QuestPDFTest
 {
 
     public class ReportDocument : IDocument
     {
-        public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
-        // public DocumentSettings GetSettings() => new DocumentSettings { Size = PageSizes.A4, Margin = 20 };
 
+
+        public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public void Compose(IDocumentContainer container)
         {
+            var textStyle = TextStyle.Default.SemiBold().FontFamily("Almarai").Medium();
+
             container
                 .Page(page =>
                 {
+                    page.Size(PageSizes.A4);
                     page.Margin(20);
-
+                    page.DefaultTextStyle(textStyle);
                     page.Header().Element(ComposeHeader);
                     page.Content().Element(ComposeContent);
                     page.Footer().Element(ComposeFooter);
                 });
         }
 
-        void ComposeHeader(IContainer container)
+        public void ComposeHeader(IContainer container)
         {
+            var Header2Image = SvgImage.FromFile("Resources/Images/Header2.svg");
+            var Header1Image = SvgImage.FromFile("Resources/Images/Header1.svg");
+            var Location = SvgImage.FromFile("Resources/Images/Location.svg");
             container.Column(column =>
             {
-                column.Item().Row(row =>
+                // First row in the header
+                column.Item().PaddingBottom(0.8f, Quest.Unit.Centimetre).ContentFromRightToLeft().Row(row =>
                 {
-                    row.RelativeItem().Column(column =>
+                    row.RelativeItem(4).Column(column =>
+                    {
+                        column.Item()
+                              .Height(15)
+                              .Svg(Header1Image);
+                    });
+
+                    row.RelativeItem(1.5f).Column(column =>
                     {
                         column.Item().Text("سند مصروف").FontSize(20).SemiBold();
-                        column.Item().MaxWidth(3, Unit.Centimetre).Row(innerRow =>
+                    });
+
+                    row.AutoItem().Column(column =>
+                    {
+                        column.Item()
+                        .Height(15)
+                        .Svg(Header2Image);
+                    });
+                });
+
+                // Second row in the header
+                column.Item().Row(row =>
+                {
+                    row.RelativeItem().Column(innerColumn =>
+                    {
+                        innerColumn.Item().PaddingBottom(3).MaxWidth(3, Quest.Unit.Centimetre).Row(innerRow =>
                         {
                             innerRow.RelativeItem().Text("رقم السند").Bold().AlignCenter();
                         });
-                        column.Item().MaxWidth(3, Unit.Centimetre).Row(innerRow =>
+                        innerColumn.Item().PaddingBottom(4).MaxWidth(3, Quest.Unit.Centimetre).Row(innerRow =>
                         {
-                            innerRow.RelativeItem().Border(1f, Unit.Point).Text("24").AlignCenter();
+                            innerRow.RelativeItem().Border(1f, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten2).Text("24").AlignCenter();
                         });
-                        column.Item().Row(innerRow =>
+                        innerColumn.Item().PaddingBottom(3).Row(innerRow =>
                         {
-                            innerRow.RelativeItem().Text("تاريخ الاصدار").Bold();
+                            innerRow.RelativeItem().Text(e =>
+                            {
+                                e.Span("تاريخ الاصدار /").FontSize(10).SemiBold();
+                                e.Span("12/3/1997").FontSize(10);
+                            });
                         });
-                        column.Item().Row(innerRow =>
+                        innerColumn.Item().MaxWidth(3, Quest.Unit.Centimetre).Row(innerRow =>
                         {
-                            innerRow.RelativeItem().Text("20 / 09 / 2022");
+                            innerRow.RelativeItem().AlignCenter().Text(e =>
+                            {
+                                e.Span(" نسخة ").FontSize(10);
+                                e.Span(" 1 ").FontSize(10);
+                            });
                         });
                     });
 
-                    row.RelativeItem().Column(column =>
+                    row.RelativeItem().AlignCenter().Column(innerColumn =>
                     {
-                        column.Item().Text("جدة حي بغداد");
-                        column.Item().Text("شارع ابن تيمية - عمارة 1");
-                        column.Item().Text("");
-                        column.Item().Text("0115036923");
-                        column.Item().Text("0553694400256");
-
+                        innerColumn.Item().Text("جدة حي بغداد");
+                        innerColumn.Item().Text("شارع ابن تيمية - عمارة 1");
+                        innerColumn.Item().Text("");
+                        innerColumn.Item().AlignCenter().Text("0115036923");
+                        innerColumn.Item().AlignCenter().Text("0553694400256");
                     });
 
-                    row.RelativeItem().Column(column =>
+                    row.RelativeItem().Column(innerColumn =>
                     {
-                        column.Item().AlignRight().Text("شركة الشرق الأوسط المتقدم").FontSize(16).SemiBold();
-                        column.Item().AlignRight().Text("الرقم الضريبي: 310098765678654").FontSize(10);
-                        column.Item().AlignRight().Text("الفرع / فرع جدة").FontSize(10);
+                        innerColumn.Item().PaddingBottom(3, Quest.Unit.Millimetre).PaddingRight(3, Quest.Unit.Millimetre).AlignRight().Text("شركة الشرق الأوسط المتقدم").FontSize(13).SemiBold();
+                        innerColumn.Item().PaddingBottom(3, Quest.Unit.Millimetre).PaddingRight(3, Quest.Unit.Millimetre).AlignRight().Text("الرقم الضريبي: 310098765678654").FontSize(10);
+                        innerColumn.Item().PaddingRight(3, Quest.Unit.Millimetre).AlignRight().Text("الفرع / فرع جدة").FontSize(10);
                     });
-                    row.ConstantItem(50).Image("Resources/Images/0.jpg"); // Placeholder for company logo
+
+                    row.ConstantItem(50).Image("Resources/Images/logo.png"); // Placeholder for company logo
                 });
 
-                column.Item().PaddingVertical(6);//.BorderBottom(1).BorderColor(Colors.Red.Lighten1);
+                column.Item().PaddingVertical(6); //.BorderBottom(1).BorderColor(Colors.Red.Lighten1);
             });
         }
+
         void ComposeContent(IContainer container)
         {
             container.PaddingVertical(10).Column(column =>
             {
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Border(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Column(column =>
+                    row.RelativeItem().ScaleToFit().Border(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Column(column =>
                     {
-                        column.Item().Row(innerRow =>
+                        column.Item().PaddingTop(10).Row(innerRow =>
                         {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("مدفوع");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("حالة الدفع").Bold();
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).AlignRight().Text("مدفوع");
+                            innerRow.ConstantItem(2.5f, Quest.Unit.Centimetre).AlignRight().PaddingRight(10).Text(": حالة الدفع").Bold();
                         });
 
                         column.Item().Row(innerRow =>
                         {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("بنك");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("طريقة الدفع").Bold();
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).AlignRight().Text("بنك");
+                            innerRow.ConstantItem(3, Quest.Unit.Centimetre).AlignRight().PaddingRight(10).Text(": طريقة الدفع").Bold();
                         });
                         column.Item().Row(innerRow =>
                         {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("10/20/3025");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("تاريخ الدفع").Bold();
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).AlignRight().Text("10/20/3025");
+                            innerRow.ConstantItem(3, Quest.Unit.Centimetre).AlignRight().PaddingRight(10).Text(": تاريخ الدفع").Bold();
                         });
                         column.Item().Row(innerRow =>
                         {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("مورد مبيعات نيو تايم");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("المستلم").Bold();
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).AlignRight().Text("مورد مبيعات نيو تايم");
+                            innerRow.ConstantItem(2.5f, Quest.Unit.Centimetre).AlignRight().PaddingRight(10).Text(": المستلم").Bold();
                         });
                     });
-                    row.ConstantItem(1, Unit.Centimetre); // seperate y
 
-                    row.RelativeItem().Border(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Column(column =>
+                    row.ConstantItem(1, Quest.Unit.Centimetre); // seperate y
+
+                    //row.RelativeItem().Border(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Column(column =>
+                    //{
+                    //    column.Item().Row(innerRow =>
+                    //    {
+                    //        innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).AlignRight().Text("مورد مبيعات نيو تايم");
+                    //        innerRow.ConstantItem(3, Quest.Unit.Centimetre).AlignRight().Border(1, Quest.Unit.Point).Text("المورد").Bold();
+                    //    });
+
+                    //    column.Item().Row(innerRow =>
+                    //    {
+                    //        innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).AlignRight().Text("5156121");
+                    //        innerRow.ConstantItem(3, Quest.Unit.Centimetre).AlignRight().Border(1, Quest.Unit.Point).Text("فاتورة رقم").Bold();
+                    //    });
+                    //    column.Item().AlignRight().Text("تيشرتات وملابس وأجهزة ");
+                    //});
+
+
+                    //description of journal
+                    row.RelativeItem().ScaleToFit().ContentFromRightToLeft()
+
+                    .Border(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Column(column =>
                     {
-                        column.Item().Row(innerRow =>
-                        {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("مورد مبيعات نيو تايم");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("المورد").Bold();
-                        });
-
-                        column.Item().Row(innerRow =>
-                        {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("5156121");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("فاتورة رقم").Bold();
-                        });
-                        column.Item().AlignRight().Text("تيشرتات وملابس وأجهزة ");
+                        column.Item().Padding(5, Quest.Unit.Millimetre).Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It haspsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage.");
                     });
                 });
 
                 column.Item().Padding(20); //seperate x
 
 
-                column.Item().ContentFromRightToLeft().Table(table =>
+                column.Item().ContentFromRightToLeft().Border(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Table(table =>
+                {
+                    table.ColumnsDefinition(columns =>
                     {
-                        table.ColumnsDefinition(columns =>
-                        {
-                            columns.RelativeColumn(2);
-                            columns.RelativeColumn(3);
-                            columns.RelativeColumn(1);
-                            columns.RelativeColumn(1);
-                            columns.RelativeColumn(1);
-                            columns.RelativeColumn(1);
-                        });
-
-                        table.Header(header =>
-                        {
-                            header.Cell().PaddingBottom(5, Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("المصروف").AlignCenter().Bold();
-                            header.Cell().PaddingBottom(5, Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("الوصف").AlignCenter().Bold();
-                            header.Cell().PaddingBottom(5, Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("المبلغ").AlignCenter().Bold();
-                            header.Cell().PaddingBottom(5, Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("نسبة الضريبة").AlignCenter().Bold();
-                            header.Cell().PaddingBottom(5, Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("قيمة الضريبة").AlignCenter().Bold();
-                            header.Cell().PaddingBottom(5, Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("الاجمالي").AlignCenter().Bold();
-                        });
-
-                        for (int i = 0; i < 12; i++)
-                        {
-                            table.Cell().BorderLeft(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).PaddingBottom(10, Unit.Millimetre).Text("مصاريف الكهرباء").AlignCenter();
-                            table.Cell().BorderLeft(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("فاتورة كهرباء شهر أكتوبر لفرع الحمدانية").AlignCenter();
-                            table.Cell().BorderLeft(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("100.00 ر.س").AlignCenter();
-                            table.Cell().BorderLeft(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("15%").AlignCenter();
-                            table.Cell().BorderLeft(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("150.00 ر.س").AlignCenter();
-                            table.Cell().BorderLeft(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("165.00 ر.س").AlignCenter().Bold();
-                        }
-                        //table.Cell().Padding(1, Unit.Centimetre);
-                        //table.Footer(footer =>
-                        //{
-                        //    footer.Cell().Element(CellStyle).Text("إجمالي مبلغ المصروف");
-                        //    footer.Cell().Element(CellStyle).Text("إجمالي ضريبة القيمة المضافة");
-                        //    footer.Cell().Element(CellStyle).Text("الإجمالي الكلي");
-                        //    footer.Cell().ColumnSpan(2).Element(CellStyle).Text("1,150.00 ر.س").AlignCenter().Bold();
-                        //});
+                        columns.RelativeColumn(2);
+                        columns.RelativeColumn(3);
+                        columns.RelativeColumn(1);
+                        columns.RelativeColumn(1);
+                        columns.RelativeColumn(1);
+                        columns.RelativeColumn(1);
                     });
+
+                    table.Header(header =>
+                    {
+                        header.Cell().PaddingBottom(5, Quest.Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("المصروف").AlignCenter().Bold();
+                        header.Cell().PaddingBottom(5, Quest.Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("الوصف").AlignCenter().Bold();
+                        header.Cell().PaddingBottom(5, Quest.Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("المبلغ").AlignCenter().Bold();
+                        header.Cell().PaddingBottom(5, Quest.Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("نسبة الضريبة").AlignCenter().Bold();
+                        header.Cell().PaddingBottom(5, Quest.Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("قيمة الضريبة").AlignCenter().Bold();
+                        header.Cell().PaddingBottom(5, Quest.Unit.Millimetre).Background(Colors.Grey.Lighten4).Text("الاجمالي").AlignCenter().Bold();
+                    });
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        table.Cell().BorderLeft(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).PaddingBottom(10, Quest.Unit.Millimetre).AlignCenter().Text(e =>
+                        {
+                            e.Span("مصاريف الكهرباء");
+                            e.EmptyLine();
+                            e.Span("545415641").FontColor(Colors.Grey.Medium);
+                        });
+                        ;
+                        table.Cell().BorderLeft(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("فاتورة كهرباء شهر أكتوبر لفرع الحمدانية").AlignCenter();
+                        table.Cell().PaddingLeft(2).BorderLeft(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("100.00").AlignCenter();
+                        table.Cell().BorderLeft(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).Text("15%").AlignCenter();
+                        table.Cell().BorderLeft(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).AlignCenter().Text("150.00");
+                        table.Cell().BorderLeft(1, Quest.Unit.Point).BorderColor(Colors.Grey.Lighten1).AlignCenter().Text(e =>
+                        {
+                            e.Span("165.00");
+                            e.Span(" ر.س ").FontColor(Colors.Grey.Darken1).FontSize(8);
+                        });
+
+                    }
+                });
 
                 column.Item().Padding(20); //seperate x
 
@@ -173,25 +227,44 @@ namespace QuestPDFTest
 
 
 
-                column.Item().Row(row =>
+                column.Item().MaxWidth(12, Quest.Unit.Centimetre).Row(row =>
                 {
-               
-                    row.ConstantItem(1, Unit.Centimetre); // seperate y
 
-                    row.RelativeItem().Border(1, Unit.Point).BorderColor(Colors.Grey.Lighten1).Column(column =>
+                    row.ConstantItem(1, Quest.Unit.Centimetre); // seperate y
+
+                    row.RelativeItem().Column(column =>
                     {
-                        column.Item().Row(innerRow =>
+                        column.Item().BorderBottom(2.2f, Quest.Unit.Point).BorderColor(Colors.Blue.Medium).AlignCenter().Row(innerRow =>
                         {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("مورد مبيعات نيو تايم");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("المورد").Bold();
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).ContentFromRightToLeft().AlignRight().Text(e =>
+                            {
+                                e.Span("4500.00");
+                                e.Span(" ر.س ").FontColor(Colors.Grey.Darken1).FontSize(8);
+                            });
+                            innerRow.ConstantItem(7, Quest.Unit.Centimetre).AlignRight().Text("اجمالي مبلغ المصروف").SemiBold();
                         });
 
-                        column.Item().Row(innerRow =>
+                        column.Item().BorderBottom(2.2f, Quest.Unit.Point).BorderColor(Colors.Black).AlignCenter().PaddingTop(6, Quest.Unit.Point).Row(innerRow =>
                         {
-                            innerRow.RelativeItem().MinHeight(1, Unit.Centimetre).AlignRight().Text("5156121");
-                            innerRow.ConstantItem(3, Unit.Centimetre).AlignRight().Border(1, Unit.Point).Text("فاتورة رقم").Bold();
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).ContentFromRightToLeft().AlignRight().Text(e =>
+                            {
+                                e.Span("1000.00");
+                                e.Span(" ر.س ").FontColor(Colors.Grey.Darken1).FontSize(8);
+                            });
+                            innerRow.ConstantItem(7, Quest.Unit.Centimetre).AlignRight().Text("اجمالي ضريبة القيمة المضافة").SemiBold();
                         });
-                        column.Item().AlignRight().Text("تيشرتات وملابس وأجهزة ");
+
+                        column.Item().AlignCenter().PaddingTop(7, Quest.Unit.Point).Row(innerRow =>
+                        {
+                            innerRow.RelativeItem().MinHeight(1, Quest.Unit.Centimetre).ContentFromRightToLeft().AlignRight().Text(e =>
+                            {
+                                e.Span("5500.00").Bold();
+                                e.Span(" ر.س ").Bold();
+                            });
+
+                            innerRow.ConstantItem(7, Quest.Unit.Centimetre).AlignRight().Text("الاجمالي الكلي").Bold();
+                        });
+                        //  column.Item().AlignRight().Text("تيشرتات وملابس وأجهزة ");
                     });
                 });
 
@@ -202,15 +275,11 @@ namespace QuestPDFTest
         {
             container.Row(row =>
             {
-                row.RelativeItem().Text("ملاحظة: هذه فاتورة تجريبية لاستخدام QuestPDF").FontSize(10);
-                row.ConstantItem(100).Height(50).Placeholder();
+                var footerImage = SvgImage.FromFile("Resources/Images/footer.svg");
+                row.RelativeItem().Svg(footerImage);
             });
         }
 
-        IContainer CellStyle(IContainer container)
-        {
-            return container.Border(1).BorderColor(Colors.Grey.Lighten2).Padding(5).AlignCenter().AlignMiddle();
-        }
     }
 }
 
