@@ -1,6 +1,7 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Data.Common;
 using Quest = QuestPDF.Infrastructure;
 
 namespace QuestPDFTest
@@ -28,33 +29,12 @@ namespace QuestPDFTest
 
         public void ComposeHeader(IContainer container)
         {
-            var Header2Image = SvgImage.FromFile("Resources/Images/Header2.svg");
-            var Header1Image = SvgImage.FromFile("Resources/Images/Header1.svg");
+            var headerImage = SvgImage.FromFile("Resources/Images/Header.svg");
             var Location = SvgImage.FromFile("Resources/Images/Location.svg");
             container.Column(column =>
             {
                 // First row in the header
-                column.Item().PaddingBottom(0.8f, Quest.Unit.Centimetre).ContentFromRightToLeft().Row(row =>
-                {
-                    row.RelativeItem(4).Column(column =>
-                    {
-                        column.Item()
-                              .Height(15)
-                              .Svg(Header1Image);
-                    });
-
-                    row.RelativeItem(1.5f).Column(column =>
-                    {
-                        column.Item().Text("سند مصروف").FontSize(20).SemiBold();
-                    });
-
-                    row.AutoItem().Column(column =>
-                    {
-                        column.Item()
-                        .Height(15)
-                        .Svg(Header2Image);
-                    });
-                });
+                column.Item().PaddingBottom(1,Quest.Unit.Centimetre).Height(1,Quest.Unit.Centimetre).Svg(headerImage);
 
                 // Second row in the header
                 column.Item().Row(row =>
@@ -216,10 +196,11 @@ namespace QuestPDFTest
 
         void ComposeFooter(IContainer container)
         {
-            container.Row(row =>
+            var footerImage = SvgImage.FromFile("Resources/Images/footer.svg");
+
+            container.Column(column =>
             {
-                var footerImage = SvgImage.FromFile("Resources/Images/footer.svg");
-                row.RelativeItem().Svg(footerImage);
+                column.Item().PaddingTop(.5f, Quest.Unit.Centimetre).Svg(footerImage);
             });
         }
 

@@ -21,10 +21,10 @@
     <None Update="Fonts\LibreBarcode39Extended-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Images\0.jpg">
+    <None Update="Resources\Images\footer.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Images\footer.svg">
+    <None Update="Resources\Images\Header.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Images\Header1.svg">
