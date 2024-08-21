@@ -33,3 +33,10 @@ jobs:
       # We will output publish files to the folder we previously created
       - name: Publish
         run: dotnet publish -c Release -o /var/www/questpdf
+
+      - name: Restart the app
+        run: |
+          export XDG_RUNTIME_DIR=/run/root/$(id -u)
+          systemctl t restart questpdf.service
+
+
