@@ -36,7 +36,9 @@ jobs:
 
       - name: Restart the app
         run: |
-          export XDG_RUNTIME_DIR=/run/root/$(id -u)
-          systemctl t restart questpdf.service
+          # export XDG_RUNTIME_DIR=/run/root/$(id -u)
+          export XDG_RUNTIME_DIR=/run/root/0
+          # systemctl --user  restart questpdf.service
+          systemctl  restart questpdf.service
 
 
