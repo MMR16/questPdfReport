@@ -24,12 +24,12 @@ internal class Program
     {
 
 
-       // var document = new UnpaidJournalReport();
+        var document = new PaymentReport();
 
-        var document = new JournalPaymenmtDetails();
+        // var document = new JournalPaymenmtDetails();
 
         document.ShowInPreviewer();
-      //  document.GeneratePdf("report.pdf");
+        document.GeneratePdf("report.pdf");
 
         var Model = new JournalInvovice
         {
