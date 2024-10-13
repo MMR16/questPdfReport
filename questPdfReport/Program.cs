@@ -23,6 +23,15 @@ internal class Program
 
     private static void Main(string[] args)
     {
+
+
+      //  var document = new PaymentReport();
+
+        // var document = new JournalPaymenmtDetails();
+
+      //  document.ShowInPreviewer();
+       // document.GeneratePdf("report.pdf");
+
         QuestPDF.Settings.License = LicenseType.Community;
         var document = new UnpaidJournalReport();
         document.ShowInCompanion(12500);
