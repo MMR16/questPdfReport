@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using QuestPDF.Companion;
 using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -24,13 +25,20 @@ internal class Program
     {
 
 
-        var document = new PaymentReport();
+      //  var document = new PaymentReport();
 
         // var document = new JournalPaymenmtDetails();
 
-        document.ShowInPreviewer();
-        document.GeneratePdf("report.pdf");
+      //  document.ShowInPreviewer();
+       // document.GeneratePdf("report.pdf");
 
+        QuestPDF.Settings.License = LicenseType.Community;
+        var document = new UnpaidJournalReport();
+        document.ShowInCompanion(12500);
+       // var document = new UnpaidJournalReport();
+       // var document = new JournalPaymenmtDetails();
+      //  document.ShowInPreviewer();
+      //  document.GeneratePdf("report.pdf");
         var Model = new JournalInvovice
         {
             Adress = "adress",
