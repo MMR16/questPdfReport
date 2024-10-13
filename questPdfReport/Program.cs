@@ -26,8 +26,10 @@ internal class Program
         QuestPDF.Settings.License = LicenseType.Community;
         var document = new UnpaidJournalReport();
         document.ShowInCompanion(12500);
+       // var document = new UnpaidJournalReport();
+       // var document = new JournalPaymenmtDetails();
+      //  document.ShowInPreviewer();
       //  document.GeneratePdf("report.pdf");
-
         var Model = new JournalInvovice
         {
             Adress = "adress",
