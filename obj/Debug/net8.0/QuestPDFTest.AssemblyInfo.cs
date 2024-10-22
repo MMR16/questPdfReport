@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuestPDFTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+992d6728426ab70ef427de2c4ab282824ad2c12c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dfb2e08f15b8361289aafea7f1f9b6dc4375740d")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuestPDFTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuestPDFTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
