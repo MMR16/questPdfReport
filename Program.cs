@@ -22,9 +22,10 @@ internal class Program
 
     private static void Main(string[] args)
     {
-
-        var document = new ReportDocument();
-        document.ShowInPreviewer();
+        QuestPDF.Settings.License = LicenseType.Community;
+       // var document = new UnpaidJournalReport();
+        var document = new TransactionsDocument();
+        document.ShowInCompanion(12500);
       //  document.GeneratePdf("report.pdf");
 
         var Model = new JournalInvovice
