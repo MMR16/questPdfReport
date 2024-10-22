@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using QuestPDF.Companion;
 using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;

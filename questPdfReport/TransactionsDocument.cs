@@ -29,7 +29,7 @@ namespace QuestPDFTest
 
         public void ComposeHeader(IContainer container)
         {
-            var HeaderImage = SvgImage.FromFile("Resources/Images/PaymentMethodHeader.svg");
+            var HeaderImage = SvgImage.FromFile("Resources/Images/TransActionHeader.svg");
 
             container.ContentFromRightToLeft().Column(column =>
             {
