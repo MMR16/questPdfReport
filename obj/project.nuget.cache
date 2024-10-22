@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Wom9jbT7PgU=",
+  "success": true,
+  "projectFilePath": "C:\\Mostafa\\questPdfReport\\QuestPDFTest.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Mostafa\\.nuget\\packages\\questpdf\\2024.10.1\\questpdf.2024.10.1.nupkg.sha512"
+  ],
+  "logs": []
+}
