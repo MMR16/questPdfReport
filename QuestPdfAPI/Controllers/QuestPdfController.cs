@@ -16,12 +16,12 @@ namespace QuestPdfAPI.Controllers
         [HttpGet]
         public IActionResult GenerateReport()
         {
-            var document = new ReportDocument();
+            var document = new TransactionsReport();
             // Generate the PDF document in memory
             var pdfBytes = document.GeneratePdf();
 
             // Return the PDF as a file
-            return File(pdfBytes, "application/pdf", "SampleReport.pdf");
+            return File(pdfBytes, "application/pdf", $"Report_{Guid.NewGuid().ToString().Substring(6,6)}.pdf");
         }
     }
 }
