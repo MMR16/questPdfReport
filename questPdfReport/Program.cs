@@ -6,6 +6,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 using QuestPDFTest;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -23,17 +24,32 @@ internal class Program
 
     private static void Main(string[] args)
     {
+        DateTime dateTime = new DateTime(2023, 2, 16, 8, 11, 0);
 
+        // Create Arabic culture info
+        CultureInfo arabicCulture = new CultureInfo("ar-SA");
+        CultureInfo EnglishCulture = new CultureInfo("en-US");
 
-      //  var document = new PaymentReport();
+        // Customize the date and time format in Arabic
+        string formattedDate = dateTime.ToString("d/M/yyyy", EnglishCulture);
+        string formattedTime = dateTime.ToString("h:mm tt", arabicCulture);
+
+        // Replace AM/PM with Arabic equivalents
+        formattedTime = formattedTime.Replace("ص", "صباحاً").Replace("م", "مساءً");
+
+        // Print the result
+        Console.WriteLine($"{formattedTime} | {formattedDate}");
+
+        //  var document = new PaymentReport();
 
         // var document = new JournalPaymenmtDetails();
 
-      //  document.ShowInPreviewer();
-       // document.GeneratePdf("report.pdf");
+        //  document.ShowInPreviewer();
+        // document.GeneratePdf("report.pdf");
 
         QuestPDF.Settings.License = LicenseType.Community;
-        var document = new UnpaidJournalReport();
+        // var document = new UnpaidJournalReport();
+        var document = new TransactionsReport();
         document.ShowInCompanion(12500);
        // var document = new UnpaidJournalReport();
        // var document = new JournalPaymenmtDetails();
