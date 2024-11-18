@@ -33,7 +33,7 @@ internal class Program
        // document.GeneratePdf("report.pdf");
 
         QuestPDF.Settings.License = LicenseType.Community;
-        var document = new UnpaidJournalReport();
+        var document = new AccEntryBalance();
         document.ShowInCompanion(12500);
        // var document = new UnpaidJournalReport();
        // var document = new JournalPaymenmtDetails();
